@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="calculatorCtrlApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../../node_modules/angular/angular.min.js"></script>
+    <script src="calculator.js"></script>
+</head>
+<body>
+
+<div ng-controller="CalculatorCtrl">
+    <p></p><input type="text" ng-model="num1"/> {{operation}} <input type="text" ng-model="num2"/>
+    <button ng-click="finalResult()">=</button>
+    {{result}}
+    <p>
+        <button ng-click="setOperator('+')">+</button>
+        <button ng-click="setOperator('-')">-</button>
+        <button ng-click="setOperator('/')">/</button>
+    </p>
+</div>
+</body>
+</html>

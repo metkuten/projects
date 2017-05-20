@@ -1,0 +1,29 @@
+.square {
+    border: 1px solid black;
+    display: inline-block;
+    height: 50px;
+    vertical-align: top;
+    width: 50px;
+}
+.square:active{
+    background-color: #33C6E4;
+}
+
+.blankSquare {
+    display: inline-block;
+    height: 50px;
+    vertical-align: top;
+    width: 50px;
+}
+.squareRow{
+    margin-top: 30px;
+}
+.smallSquare{
+    height: 20px;
+    width: 20px;
+    background-color: #57D497;
+    border: 1px solid black;
+    vertical-align: top;
+    margin-left: 80%;
+    margin-top: 25%;
+}

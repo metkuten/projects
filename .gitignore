@@ -1,0 +1,20 @@
+.gradle
+.sonar
+.nb-gradle
+.idea
+*.iml
+modules/*/*.iml
+modules/*.iml
+gradle/
+gradlew
+gradlew.bat
+build
+out
+npm-debug.log
+Test Results - Tests.html
+logs
+.DS_Store
+classes/
+src/test/resources/service.properties
+src/main/resources/service.properties
+node_modules/

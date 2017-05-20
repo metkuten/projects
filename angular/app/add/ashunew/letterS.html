@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="letterS.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $(".square").click(function () {
+                $(this).toggleClass("blue");
+            });
+        });
+    </script>
+
+</head>
+<body>
+    <div class="container">
+        <div class="squareRow">
+        <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square">
+                <div class="smallSquare"></div>
+            </div>
+
+        </div>
+        <div class="squareRow">
+            <div class="square"></div>
+        </div>
+        <div>
+            <div class="square center"></div>
+        </div>
+        <div>
+            <div class="square right"></div>
+        </div>
+        <div class="squareRow">
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+        </div>
+    </div>
+</body>
+</html>

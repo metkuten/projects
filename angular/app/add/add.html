@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="addValue">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../../node_modules/angular/angular.js" rel="script"></script>
+    <script src="add.js" rel="script"></script>
+</head>
+
+<body ng-controller="AddCtrl as vm">
+    <form autocomplete="off">
+
+        Number 1<input type="text" name="number1" ng-model="vm.number1" required>
+        <p></p>
+        Number 2 <input type="text" name="number2" ng-model="vm.number2"> <button ng-click=vm.addNumber()>add</button>
+        <p></p>
+        Addition of two numbers is = {{ vm.number3}}
+        <br/>{{vm.number1}}
+
+    </form>
+
+</body>
+
+</html>

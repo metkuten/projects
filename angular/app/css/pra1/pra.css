@@ -1,0 +1,14 @@
+body{
+    background: darkgray;
+}
+
+p{
+    color: #FF9900;
+    font-size: 60px;
+}
+
+p::selection{
+    color: red;
+}
+
+

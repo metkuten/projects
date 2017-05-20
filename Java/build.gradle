@@ -1,0 +1,191 @@
+plugins {
+	id 'java'
+	id 'maven'
+	id "org.sonarqube" version "2.0.1"
+	id 'maven-publish'
+
+	// this new org.sonarqube plugin (replacement for sonar-runner) does not pick up the sonar project file
+	// so we're not yet adopting until we understand that better
+	//id "org.sonarqube" version "1.0"
+
+	// Gradle JaCoCo plugin - https://docs.gradle.org/current/userguide/jacoco_plugin.html
+	id 'jacoco'
+}
+
+group 'com.svb.murano.common'
+version '3.2.15'
+
+def nexusUrl = "http://sal-dvs-mnexus1.dev.svbank.com:8081/nexus/content/repositories/mur-internal"
+
+compileJava {
+	sourceCompatibility = JavaVersion.VERSION_1_8
+}
+
+allprojects {
+	apply plugin: 'java'
+
+	repositories {
+		/**
+		 * A note on repositories. Local, and nexus repositiories are avalible to all environments (so far), maven central is not.
+		 * The result of this is that, in order to add new dependencies, a developer must uncomment the mavenCentral repo,
+		 * pull in the new dependencies, verify that the build works, and then run the svb-vagrant/tools/publishPomsToNexus.py script
+		 */
+		mavenLocal()        // this is your local maven cach(s)
+		maven {             // this is the nexus repo where we store murano build artifacts
+			url nexusUrl
+		}
+		//mavenCentral()    // this is the public maven repo. it not accessible to most build/dev machines
+		maven {             // this is the nexus repo where we store
+			url "http://sal-dvs-mnexus1.dev.svbank.com:8081/nexus/content/repositories/mvn-copy"
+			name "nexus-cache"
+		}
+	}
+}
+
+configurations {
+	provided
+	compile.extendsFrom provided
+}
+
+publishing {
+	repositories {
+		maven { // this is the nexus repo
+			url nexusUrl
+			name "nexus"
+			credentials {
+				username 'murano-builder'
+				password 'tanouha,r8idnd'
+			}
+		}
+	}
+	publications {
+		nexus(MavenPublication) {
+			groupId group
+			artifactId rootProject.name
+			version version
+
+			artifact jar
+		}
+	}
+}
+
+dependencies {
+	// database project dependency
+	provided 'com.svb.murano.common:mur-java-lib-interfaces:1.1.2'
+	provided 'com.svb.murano.common:mur-java-lib-exception:3.2.2'
+	provided 'com.svb.murano.common:mur-java-lib-providers:1.0.2'
+	provided 'com.svb.murano.common:mur-java-lib-logger:4.0.2'
+	provided 'com.svb.murano.common:mur-java-lib-httpclient:6.3.3'
+
+	//Dependencies
+	provided "javax.servlet:servlet-api:2.5"
+	provided 'javax.inject:javax.inject:1'
+	provided 'org.hibernate:hibernate-validator:5.2.2.Final'
+
+	// Jersey dependencies
+	provided 'org.glassfish.jersey.containers:jersey-container-servlet:2.22.1'
+	provided 'org.glassfish.jersey.core:jersey-client:2.22.1'
+	provided 'org.glassfish.jersey.core:jersey-server:2.22.1'
+	provided 'org.glassfish.jersey.connectors:jersey-apache-connector:2.22.1'
+
+	//Jackson dependencies
+	// TODO: check if we need Object Mapper
+	provided "com.fasterxml.jackson.core:jackson-databind:2.6.1"
+	provided "com.fasterxml.jackson.core:jackson-core:2.6.1"
+	provided "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.6.1"
+	provided "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.6.1"
+
+	//dependencies for test
+	testCompile 'org.jmockit:jmockit:1.8'
+	testCompile 'org.testng:testng:6.8.21'
+	testCompile 'org.uncommons:reportng:1.1.4'
+	testCompile 'org.slf4j:slf4j-api:1.7.2'
+	testCompile 'org.hamcrest:hamcrest-all:1.3'
+
+	testCompile 'org.glassfish.jersey.test-framework:jersey-test-framework-core:2.22.1'
+	testCompile 'org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-grizzly2:2.22.1'
+	provided 'org.springframework:spring-core:4.1.6.RELEASE'
+	provided 'org.springframework:spring-context:4.1.6.RELEASE'
+	testCompile 'org.springframework:spring-test:4.1.6.RELEASE'
+	testCompile 'org.hibernate:hibernate-validator:5.0.1.Final'
+
+	testCompile "org.mockito:mockito-all:1.10.19"
+	testCompile "org.powermock:powermock-mockito-release-full:1.6.4"
+	testCompile "org.mockito:mockito-core:2.2.14"
+
+	compile 'org.testng:testng:6.9.6'
+	compile 'org.testng:testng:6.9.6'
+	compile 'org.junit.jupiter:junit-jupiter-api'
+	compile 'org.testng:testng:6.9.6'
+	compile 'org.testng:testng:6.9.6'
+}
+
+// Test framework used
+test {
+	useTestNG()
+	options {
+		listeners << 'org.uncommons.reportng.JUnitXMLReporter'
+
+		// https://discuss.gradle.org/t/provide-support-for-per-unit-test-coverage-reports-in-sonarqube/397
+		//listeners << 'org.sonar.java.jacoco.TestNGListener'
+	}
+
+	jacoco {
+		append = false
+		destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
+		classDumpFile = file("$buildDir/jacoco/classpathdumps")
+	}
+}
+
+jacoco {
+
+	// Note: going with the defaults for these JaCoCo properties:
+	//  reportsDir  "$buildDir/reports/jacoco"
+
+	// trying to use the latest version of jacoco (0.7.5.201505241946 released 5/24/2015)
+	// causes an error when Sonar tries to consume jacoco output
+	//  ERROR: Unable to execute Sonar
+	//  ERROR: Caused by: Unable to read C:\dev\svb-services-dashboard\.\build\jacoco\jacocoTest.exec
+	//  ERROR: Caused by: Incompatible version 1007.
+	// for more info see: http://stackoverflow.com/questions/30459260/jacoco-sonarqube-incompatible-version-1007
+
+	// so we drop down one version from latest and are able to use 0.7.4.201502262128
+	toolVersion = "0.7.4.201502262128"
+}
+
+jacocoTestReport {
+	description "Generates an html report after running tests to review jacoco code coverage"
+	reports {
+		xml.enabled false
+		csv.enabled false
+		html.destination "${buildDir}/jacocoHtml"
+	}
+	doLast {
+		// provide a helpful hint on where to find the test code coverage report
+		println "HTML test code coverage report can be found at " + reports.html.destination + "\\index.html"
+	}
+}
+
+task copyDependenciesToLibForSonar(type: Copy) {
+	description "Copy dependencies to libForSonar directory so analysis can find them"
+
+	def libDir = file("$buildDir/libForSonar");
+	libDir.mkdirs();
+
+	into libDir
+	from configurations.runtime
+}
+
+jar {
+	dependsOn test
+	dependsOn copyDependenciesToLibForSonar
+	dependsOn configurations.runtime
+	version version
+	
+	from {
+		(configurations.runtime - configurations.provided).collect {
+			it.isDirectory() ? it : zipTree(it)
+		}
+	}
+	archiveName rootProject.name + ".jar"
+}

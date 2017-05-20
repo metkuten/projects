@@ -1,0 +1,12 @@
+sal-uvs-mweb01.ppdmz.local	10.140.6.91
+sal-uvs-mweb02.ppdmz.local	10.140.6.92
+sal-uvs-mweb03.ppdmz.local	10.140.6.93
+sal-uvs-mweb04.ppdmz.local	10.140.6.110
+sal-uvs-mweb05.ppdmz.local	10.140.6.111
+sal-uvs-mweb06.ppdmz.local	10.140.6.112
+sal-uvs-msvc01.ppdmz.local	10.140.6.94
+sal-uvs-msvc02.ppdmz.local  10.140.6.95
+sal-uvs-msvc03.ppdmz.local	10.140.6.96
+sal-uvs-msvc04.ppdmz.local	10.140.6.113
+sal-uvs-msvc05.ppdmz.local	10.140.6.114
+sal-uvs-msvc06.ppdmz.local	10.140.6.11
