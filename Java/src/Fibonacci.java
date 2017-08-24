@@ -16,7 +16,7 @@ public class Fibonacci {
                 continue;
             }
             int addition = number1+number2;
-            System.out.println(number1+number2);
+            System.out.println(addition);
             number1 = number2;
             number2 = addition;
         }
