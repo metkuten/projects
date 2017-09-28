@@ -1,23 +1,26 @@
 package algo;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ArrayListEx {
     public static void main(String[] args) {
 
         ArrayList arrayList = new ArrayList();
         arrayList.add("Nishikant");
+        arrayList.add("Pandurang");
         arrayList.add("Metkute");
-        System.out.println(arrayList.toString());
-
+        System.out.print(arrayList);
     }
 }
 
 class ArrayList {
-    int capacity = 10;
+    int capacity = 2;
     int counter;
     public Object[] objectArr;
 
     ArrayList(){
-        objectArr = new Object[5];
+        objectArr = new Object[capacity];
     }
 
     public void add(Object value){
@@ -35,8 +38,9 @@ class ArrayList {
     }
 
     private void ensureCapacity(){
-        if(objectArr.length == capacity){
+        if(counter == capacity){
             capacity = capacity * 2;
+            objectArr = Arrays.copyOf(objectArr,capacity);
         }
     }
 }
