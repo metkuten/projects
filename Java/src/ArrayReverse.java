@@ -14,5 +14,7 @@ public class ArrayReverse {
         for(int i: numbers){
             System.out.print(i);
         }
+
+
     }
 }
